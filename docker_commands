@@ -1,0 +1,16 @@
+docker images
+docker run -d -p 5000:5000 my_flask_app
+docker ps -a
+docker-machine ls
+docker stop
+docker container rm $(docker container ls -aq)
+docker image rm
+docker -v
+docker system prune -a
+docker build -t my_docker_flask:latest .
+docker run -d -p 5000:5000 my_docker_flask:latest
+
+
+###########
+docker build -t demand_pred_api .
+docker run -d -p 8080:7070 demand_pred_api
