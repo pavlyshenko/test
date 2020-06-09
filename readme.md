@@ -46,7 +46,7 @@ End point: 'http://server_ip:port/train/'
 
 Type of request : POST, json
 
-#### json keys:
+#### Json keys:
 
  'userid' - user id;
 
@@ -128,7 +128,7 @@ Json keys: 'train_model_scores', 'result_code'.
 'train_model_scores' - training model scores, 
 e.g., important score: train_model_scores['test_rmae'] - relative mean of absolute error
 
-'result_code':  result of request processing:  'Ok' - successful result, 
+'result_code':    'Ok' - successful result, 
 in the case of error there are the following 
 codes: 'incorrect data load', 'incorrect features processing', 'error model training'. 
 
@@ -138,12 +138,15 @@ codes: 'incorrect data load', 'incorrect features processing', 'error model trai
 
  Type of request : POST, json
 
- json keys: the same like for model training
+#### Json keys:
+
+ 'userid' - user id;
+
+ 'categorical_features' - list of categorical features;
+
+ 'numerical_features' - list of numerical features;
 
  'data_test' - the same data frame as for model training except target variable column which should be predicted
-
- Result of prediction - list of predicted target variable in json format, values in the list correspond 
- to the rows of test data frame.  
  
 #### Example of request data:
 
@@ -203,6 +206,8 @@ codes: 'incorrect data load', 'incorrect features processing', 'error model trai
 
 #### Response for prediction request:
 
+Result of prediction - list of predicted target variable in json format, values in the list correspond to the rows of test data frame.  
+
 Json  keys: 'result_code', 'prediction'
 
 'result_code' - result of request processing:  'Ok' - successful result, 
@@ -229,12 +234,10 @@ docker build -t prediction_rest_api .
 ```
 
 Run docker container:
-
 ```
 cd script_dir
 docker run -d -p 8080:8888 prediction_rest_api
 ```
-
 Test container prediction_rest_api:
 
 ```
@@ -242,7 +245,6 @@ cd script_dir
 source venv/bin/activate
 python test.py
 ```
-
 Create GitHub packages:
 ---
 
@@ -260,6 +262,9 @@ Log in into GitHub and push docker package:
 
 ```
 docker login docker.pkg.github.com -u $DOCKER_USER -p $DOCKER_PASS
+```
+Push docker images
+```
 docker tag $(docker images -q prediction_rest_api) docker.pkg.github.com/vallkor/demandforecaster/prediction_rest_api
 docker push docker.pkg.github.com/vallkor/demandforecaster/prediction_rest_api
 ```
