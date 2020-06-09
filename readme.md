@@ -40,19 +40,27 @@ python test.py
 Prediction REST API end points:
 ---
 
-Model training:
- End point: 'http://server_ip:port/train/'
- Type of request : POST, json
- json keys:
+### Model training:
+
+End point: 'http://server_ip:port/train/'
+
+Type of request : POST, json
+
+#### json keys:
+
  'userid' - user id;
+
  'categorical_features' - list of categorical features;
+
  'numerical_features' - list of numerical features;
- 'data_train' - data frame for training predictive model, format is the list of dictionaries where  key is feature name, 
-  value is the value of feature for data sample;
- 'target_variable' - target variable name;
-  Data frame has obvious date feature with name 'date' and format 'yyyy-mm-dd'
+
+ 'data_train' - data frame for training predictive model, format is the list of dictionaries where  key is feature name, value is the value of feature for data sample;
+ 
+'target_variable' - target variable name;
+ 
+ Data frame has obvious date feature with name 'date' and format 'yyyy-mm-dd'
   
-  Example of json data for model training request:
+####  Example of json data for model training request:
   
 {'userid': 'user1',
  'categorical_features': ['dept_id',
@@ -113,7 +121,7 @@ Model training:
    'snap_WI': 0.0,
    'sales': 392.58000000000015}]}
 
-Response for model training request:
+#### Response for model training request:
 
 Json keys: 'train_model_scores', 'result_code'.
 
@@ -124,15 +132,21 @@ e.g., important score: train_model_scores['test_rmae'] - relative mean of absolu
 in the case of error there are the following 
 codes: 'incorrect data load', 'incorrect features processing', 'error model training'. 
 
- Prediction:
+### Prediction:
+
  End point: 'http://server_ip:port/predict/'
+
  Type of request : POST, json
+
  json keys: the same like for model training
+
  'data_test' - the same data frame as for model training except target variable column which should be predicted
+
  Result of prediction - list of predicted target variable in json format, values in the list correspond 
  to the rows of test data frame.  
  
- Example of request data:
+#### Example of request data:
+
  {'userid': 'user1',
  'categorical_features': ['dept_id',
   'cat_id',
@@ -187,13 +201,16 @@ codes: 'incorrect data load', 'incorrect features processing', 'error model trai
    'snap_TX': 1.0,
    'snap_WI': 0.0}]}
 
-Response for prediction request:
+#### Response for prediction request:
+
 Json  keys: 'result_code', 'prediction'
+
 'result_code' - result of request processing:  'Ok' - successful result, 
 in the case of error there are the following 
 codes: 'incorrect data load', 'incorrect train file load', 'incorrect model file load' 
-  
- Example of list for Json key 'prediction':
+
+#### Example of list for Json key 'prediction':
+
  {'prediction': [722.3371006983247,
   1022.643302848146,
   1000.4824859038298,
@@ -203,31 +220,47 @@ codes: 'incorrect data load', 'incorrect train file load', 'incorrect model file
   ]}
   
 Docker container:
+---
 
 Build docker container:
+```
 cd script_dir
 docker build -t prediction_rest_api .
+```
 
 Run docker container:
+
+```
 cd script_dir
 docker run -d -p 8080:8888 prediction_rest_api
+```
 
 Test container prediction_rest_api:
+
+```
 cd script_dir
 source venv/bin/activate
 python test.py
+```
 
 Create GitHub packages:
+---
 
 Create access tocken according to:
 https://github.com/vallkor/DemandForecaster/blob/develop/README.md#what-is-github-packages
 
 Set up environment variable:
+
+```
 export DOCKER_PASS=...
 export DOCKER_USER=...
+```
 
 Log in into GitHub and push docker package:
+
+```
 docker login docker.pkg.github.com -u $DOCKER_USER -p $DOCKER_PASS
 docker tag $(docker images -q prediction_rest_api) docker.pkg.github.com/vallkor/demandforecaster/prediction_rest_api
 docker push docker.pkg.github.com/vallkor/demandforecaster/prediction_rest_api
+```
 
